@@ -1,0 +1,24 @@
+{
+    "name": "Working_tools ver2",
+    "description": "Công cụ giúp làm việc dễ hơn - by VLBL",
+    "version": "2.0",
+    "manifest_version": 2,
+    "background": {
+      "service_worker": "background.js",
+      "type": "module"
+    },
+    "permissions": ["identity", "identity.email"],
+    "page_action": {
+      "default_popup": "popup/popup.html"
+    },
+    "options_page": "option/options.html",
+    "web_accessible_resources": ["fontawesome/webfonts/*", "fontawesome/css/*","audio/request.mp3"],
+    "content_scripts": [
+        {
+          "matches": ["https://*.force.com/*", "https://cs.shopee.vn/portal/*","https://cs.uat.shopee.vn/portal/inhouse/*", "https://docs.google.com/spreadsheets/*"],
+          "css": ["css/style.css","fontawesome/css/all.css"],
+          "js": ["js/index.js"],
+          "all_frames": true
+        }
+    ]
+}
