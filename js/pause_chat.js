@@ -44,7 +44,7 @@ function handle_time(result,am,h,m,s) {
         return e.value
     })
     // console.log(array_time_res);
-    if (am === 'PM') {
+    if (am === 'AM') {
         if (h == array_time_res[0] && m == array_time_res[1] && s == array_time_res[2]) {
             chat_wrap()
         }

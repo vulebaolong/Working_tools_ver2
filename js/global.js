@@ -184,14 +184,14 @@ function chat_wrap(params) {
     if (item_section_status === "Online") {
 
         //click lần 1 vào Online ở ngoài
-        chat_wrap_Reading2(item_section, 1)
+        chat_wrap_Reading(item_section, 1)
             .then((e) => {
                 console.log(e);
                 // setTimeout(() => {
                 //     e.click() 
                 // }, 10000);
                 // click lần 2 vào Busy bên tay trái
-                return chat_wrap_Reading2(e, 2)
+                return chat_wrap_Reading(e, 2)
             })
             .then((e) => {
                 console.log(e);
@@ -202,10 +202,9 @@ function chat_wrap(params) {
             })
     }
     if (item_section_status === "Offline") {
-        test()
+
         //click lần 1 vào Online ở ngoài
-        function test() {
-            chat_wrap_Reading(item_section, 1)
+        chat_wrap_Reading(item_section, 1)
             .then((e) => {
                 console.log(e);
                 // setTimeout(() => {
@@ -220,17 +219,8 @@ function chat_wrap(params) {
                 e.click()
                 //click lần 4 ra ngoài (Online ở ngoài)
                 item_section.click()
-                setTimeout(() => {
-                    let item_section_status = el_right_section[3].children[0].children[0].children[0].children[1].children[0].innerText
-                    console.log(item_section_status);
-                    if (item_section_status === "Offline") {
-                        item_section.click()
-                        test()
-                    }
-                }, 200);
-
+                console.log(el_right_section[3].children[0].children[0].children[0].children[1].children[0].innerText);
             })
-        }
     }
 }
 function chat_wrap_Reading(item_section, step, item_section_status) {
@@ -244,7 +234,16 @@ function chat_wrap_Reading(item_section, step, item_section_status) {
                 break;
             case 2:
                 //bấm lần 2
-                targetNodes = item_section.parentElement.parentElement.children[1].children[0].children[0]
+                switch (item_section_status) {
+                    case 'Offline':
+                        targetNodes = item_section.parentElement.parentElement.children[1].children[0].children[0]
+                        break;
+
+                    default:
+                        targetNodes = item_section.parentElement.parentElement.children[1]
+                        break;
+                }
+
                 break;
         }
         console.log(targetNodes, 'step: ', step);

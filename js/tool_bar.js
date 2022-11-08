@@ -35,7 +35,7 @@ let html_tool_bar = `
                         </div>
                     </div>
                     <div class="toolbar_item toolbar_mid_setting">
-                        <i class="fa-solid fa-paper-plane-top"></i>
+                        <i class="fa-solid fa-gear"></i>
                         <div class="toolbar_mid_setting_container">
                             <div class="toolbar_mid_setting_content">
                                 <div class="split_c margin_top10"></div>
