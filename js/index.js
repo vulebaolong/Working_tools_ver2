@@ -1,23 +1,4 @@
-﻿let html_toggle_switch = `
-    <label class="toggle_switch">
-        <input class="on_off_audio" type="checkbox">
-        <span></span>
-    </label>
-`
-
-let htmlSearchLDP = `
-<div class="search_container">
-    <div class="search_box">                
-        <div class="search_button">                          
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </div>
-        <input type="text" Placeholder="Tìm kiếm L3" class="search_input"/>                
-    </div>
-    <div class="search_result_box">
-                        
-    </div>
-</div>
-`
+﻿
 
 let htmlONOFF = `
     <button type="button" class="btn_ONOFF"></button>
@@ -68,7 +49,9 @@ var erorr2 = `
 
 window.onload = function () {
     //https://docs.google.com/spreadsheets/d/149lCWT_uSoAYQpmoj4xPXvknxtGLG5whmskeIHEJA6s/edit#gid=0
-    const sheetID = '149lCWT_uSoAYQpmoj4xPXvknxtGLG5whmskeIHEJA6s'
+    //https://docs.google.com/spreadsheets/d/1tcgah_KX9wHjk7IyRLa6uP_N4euE-9UaYQLOQkB1CEg/edit?usp=sharing
+    // const sheetID = '149lCWT_uSoAYQpmoj4xPXvknxtGLG5whmskeIHEJA6s'
+    const sheetID = '1tcgah_KX9wHjk7IyRLa6uP_N4euE-9UaYQLOQkB1CEg'
 
     const sheetName_Authen = 'Request_Authen'
     const url_Authen = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?&sheet=${sheetName_Authen}`
@@ -110,136 +93,29 @@ window.onload = function () {
 
 }
 
-function Authen_Erorr(URL, col, params, datass) {
-    return new Promise((resolve, reject) => {
-        if (params === 1) {
-            Get_Email_Request(URL, col)
-                .then((datas) => {
-                    //console.log(datas);
-                    datas.shift()
-                    //console.log(datas);
-                    resolve(datas)
-                })
-        }
-        if (params === 2) {
-            Get_Email_current()
-                .then((Email_current) => {
-                    //console.log(`Email_current (${col}): `, Email_current)
-                    //console.log(`datass (${col}): `, datass)
-                    var result = datass.includes(Email_current)
-                    resolve(result)
-                })
-        }
-    })
-}
 
-function Get_Email_Request(URL, col) {
-    return new Promise(function (resolve, reject) {
-        Get_data_gdoc_col(URL, col)
-            .then((datas) => {
-                resolve(datas)
-            })
-    })
-}
-
-function Get_Email_current() {
-    return new Promise(function (resolve, reject) {
-        var objValue = { value: "Gửi đi tin nhắn để lấy TabID_work" }
-
-        chrome.runtime.sendMessage(objValue, (e) => {
-            var tabID = e.Work_ID
-            var Email = e.Email
-
-            // console.group('Nhận phản hồi từ tin nhắn gửi đi: ', objValue)
-            // console.log('Work_ID: ', tabID)
-            // console.log('Email: ', Email)
-            // console.groupEnd()
-
-            resolve(Email)
-        })
-
-        // console.group('Gửi đi')
-        // console.log('gửi đi: ', objValue)
-        // console.groupEnd()
-    })
-}
-
-function Get_data_gdoc_col(URL, col) {
-    return new Promise((resolve, reject) => {
-        var row = []
-        var col_ID
-
-        fetch(URL)
-            .then(res => res.text())
-            .then(rep => {
-                const data = JSON.parse(rep.substr(47).slice(0, -2))
-                // console.log(data);
-                // console.log(data.table.cols);
-                // console.log(data.table.rows);
-
-                var obj_cols = data.table.cols
-                for (var prop_cols in obj_cols) {
-                    var obj2_cols = obj_cols[prop_cols]
-                    // console.group(prop_cols)
-                    // console.log('obj_cols.' + prop_cols + '=' + obj_cols[prop_cols])
-                    // console.log('ID: ', obj2_cols.id);
-                    // console.log('value: ', obj2_cols.label);
-                    // console.groupEnd()
-                    if (obj2_cols.id === col) {
-                        row = [...row, obj2_cols.label.trim()]
-                        //console.log(row)
-
-                        col_ID = prop_cols
-                        //console.log('col_ID: ', col_ID);
-                    }
-                }
-
-                var obj_rows = data.table.rows
-                for (var prop_rows in obj_rows) {
-                    if (obj_rows[prop_rows].c[col_ID] !== null) {
-                        //console.log('prop_rows.' + prop_rows + '=' + obj_rows[prop_rows])   
-                        //console.log('nè: ', obj_rows[prop_rows].c[col_ID].v)
-                        row = [...row, obj_rows[prop_rows].c[col_ID].v.trim()]
-                    }
-                }
-                resolve(row)
-            })
-    })
-}
-
-function keyalt(e, key) {
-
-    document.addEventListener("keydown", function (event) {
-        //xem đang nhấn phím gì
-        //console.log(event);
-        if (event.altKey && event.code === key) {
-            e.click()
-        }
-
-    }, false)
-}
 
 function START(S_inhouse, S_order, Authen) {
     //word
     if (S_inhouse != -1 && S_order == -1) {
-        
+
 
         const body = document.querySelector('body')
 
-        body.insertAdjacentHTML("afterend", html_nav_left + htmlONOFF);
+        body.insertAdjacentHTML("afterend", html_nav_left + htmlONOFF + html_tool_bar);
 
         //ONOFF=======================================================================
-        var ONOFF = document.querySelector('.btn_ONOFF')
+        let ONOFF = document.querySelector('.btn_ONOFF')
         ONOFF.onclick = () => {
             document.querySelector('.Auto_inhouse').classList.toggle("none")
             document.querySelector('.search_container').classList.toggle("none")
             document.querySelector('.toggle_switch').classList.toggle("none")
-            
+
             console.log('on off');
         }
         //=======================================================================
 
-        var root = document.querySelector('#root')
+        let root = document.querySelector('#root')
         console.log(root);
         console.log(root.children.length);
         if (root.children.length > 0) {
@@ -250,8 +126,8 @@ function START(S_inhouse, S_order, Authen) {
                 var el_nav_group = el_main_container.children[0].children[0].children[0]
                 console.log(el_nav_group);
                 el_nav_group.style.overflow = "inherit"
-                el_nav_group.lastElementChild.insertAdjacentHTML("afterend", htmlSearchLDP + html_toggle_switch)
-                START_Search()
+                el_nav_group.lastElementChild.insertAdjacentHTML("afterend", htmlSearchLDP)
+                start_search()
 
                 console.log(el_main_container.children[1]);
                 Get_el_main_container(el_main_container.children[1], 3)
@@ -267,624 +143,109 @@ function START(S_inhouse, S_order, Authen) {
                     console.log(e2[1]);
                     e2[0].style.overflow = "inherit"
                     e2[0].lastElementChild.insertAdjacentHTML("afterend", htmlSearchLDP)
-                    START_Search()
+                    start_search()
 
                     return Get_el_main_container(e2[1], 3)
                 })
         }
 
+        testAudio_clickalt()
+        listen_key()
+        run_tool_bar(body)
+        time_clock()
+        pause_chat()
+        // if (Authen) {
+        //     var Auto_inhouse = document.querySelector('.Auto_inhouse')
+        //     Auto_inhouse.insertAdjacentHTML("beforeend", html_Erorr);
+        //     Auto_inhouse.insertAdjacentHTML("afterend", erorr1);
 
+        //     var el_item_erorr = document.querySelector('.item_erorr')
+        //     var el_menu_erorr = document.querySelector('.menu_erorr')
+        //     Array.from(document.querySelector('.menu_erorr').children).forEach((e) => {
+        //         console.log(e);
+        //         switch (e.classList[0]) {
+        //             case 'item_erorr1':
+        //                 e.onclick = (event) => {
+        //                     event.stopPropagation()
+        //                     Erorr(1)
+        //                 }
+        //                 break
 
-        if (Authen) {
-            var Auto_inhouse = document.querySelector('.Auto_inhouse')
-            Auto_inhouse.insertAdjacentHTML("beforeend", html_Erorr);
-            Auto_inhouse.insertAdjacentHTML("afterend", erorr1);
+        //             case 'item_erorr2':
+        //                 e.onclick = (event) => {
+        //                     event.stopPropagation()
+        //                     Erorr(2)
+        //                 }
+        //                 break
 
-            var el_item_erorr = document.querySelector('.item_erorr')
-            var el_menu_erorr = document.querySelector('.menu_erorr')
-            Array.from(document.querySelector('.menu_erorr').children).forEach((e) => {
-                console.log(e);
-                switch (e.classList[0]) {
-                    case 'item_erorr1':
-                        e.onclick = (event) => {
-                            event.stopPropagation()
-                            Erorr(1)
-                        }
-                        break
+        //             case 'item_erorr3':
+        //                 e.onclick = (event) => {
+        //                     event.stopPropagation()
+        //                     Erorr(3)
+        //                 }
+        //                 break
 
-                    case 'item_erorr2':
-                        e.onclick = (event) => {
-                            event.stopPropagation()
-                            Erorr(2)
-                        }
-                        break
+        //             default:
+        //                 console.log('Item_word: không có ', e)
+        //                 break
+        //         }
+        //     });
 
-                    case 'item_erorr3':
-                        e.onclick = (event) => {
-                            event.stopPropagation()
-                            Erorr(3)
-                        }
-                        break
+        //     el_item_erorr.onclick = (e) => {
+        //         e.stopPropagation()
+        //         el_menu_erorr.classList.toggle('select')
+        //         select(el_item_erorr)
+        //     }
 
-                    default:
-                        console.log('Item_word: không có ', e)
-                        break
-                }
-            });
+        //     //lắng nghe IN_erorr=======================================================================
+        //     var el_erorr_value = document.querySelector('.shopee-react-toast-content')
+        //     var el_erorr_body = document.querySelector('.shopee-react-toast-body')
+        //     var el_IN_erorr = document.querySelector('.IN_erorr')
 
-            el_item_erorr.onclick = (e) => {
-                e.stopPropagation()
-                el_menu_erorr.classList.toggle('select')
-                select(el_item_erorr)
-            }
+        //     el_erorr_body.onclick = (e) => {
+        //         e.stopPropagation()
 
-            //lắng nghe IN_erorr=======================================================================
-            var el_erorr_value = document.querySelector('.shopee-react-toast-content')
-            var el_erorr_body = document.querySelector('.shopee-react-toast-body')
-            var el_IN_erorr = document.querySelector('.IN_erorr')
+        //         switch (el_IN_erorr.classList.length) {
+        //             case 1:
+        //                 el_IN_erorr.classList.add("none")
+        //                 el_erorr_value.innerHTML = el_IN_erorr.value
+        //                 break;
 
-            el_erorr_body.onclick = (e) => {
-                e.stopPropagation()
+        //             case 2:
+        //                 el_IN_erorr.classList.remove("none")
+        //                 el_IN_erorr.focus()
+        //                 break;
 
-                switch (el_IN_erorr.classList.length) {
-                    case 1:
-                        el_IN_erorr.classList.add("none")
-                        el_erorr_value.innerHTML = el_IN_erorr.value
-                        break;
+        //             default:
+        //                 break;
+        //         }
+        //     }
 
-                    case 2:
-                        el_IN_erorr.classList.remove("none")
-                        el_IN_erorr.focus()
-                        break;
+        //     el_IN_erorr.onkeydown = (e) => {
+        //         if (e.keyCode === 13) {
+        //             el_IN_erorr.classList.add("none")
+        //             el_erorr_value.innerHTML = el_IN_erorr.value
+        //         }
+        //     }
 
-                    default:
-                        break;
-                }
-            }
+        //     el_IN_erorr.onclick = (e) => {
+        //         e.stopPropagation()
+        //     }
 
-            el_IN_erorr.onkeydown = (e) => {
-                if (e.keyCode === 13) {
-                    el_IN_erorr.classList.add("none")
-                    el_erorr_value.innerHTML = el_IN_erorr.value
-                }
-            }
+        //     document.addEventListener("keydown", function (event) {
+        //         //xem đang nhấn phím gì
+        //         //console.log(event);
+        //         if (event.altKey && event.code === 'KeyO') {
+        //             document.querySelector('.item_erorr').classList.toggle('none')
+        //         }
 
-            el_IN_erorr.onclick = (e) => {
-                e.stopPropagation()
-            }
+        //     }, false)
 
-            document.addEventListener("keydown", function (event) {
-                //xem đang nhấn phím gì
-                //console.log(event);
-                if (event.altKey && event.code === 'KeyO') {
-                    document.querySelector('.item_erorr').classList.toggle('none')
-                }
-    
-            }, false)
-
-        }
+        // }
     }
 }
 
-//Hàm search============================
-function START_Search(params) {
-    var el_search_button = document.querySelector('.search_button')
-    // var el_search_box = document.querySelector('.search_box')
-    var el_search_input = document.querySelector('.search_input')
-    var el_search_result_box = document.querySelector('.search_result_box')
-    var el_search_container = document.querySelector('.search_container')
 
-    // body.onclick = (e) => {
-    //     var docu_toggle = Array.from(e.target.classList)
-    //     var reslut_docu_toggle = docu_toggle.some(e => {
-    //         console.log(e);
-    //         return  e === 'search_container' || 
-    //                 e === 'search_box' || 
-    //                 e === 'search_button' || 
-    //                 e === 'search_input' || 
-    //                 e === 'search_result_box' || 
-    //                 e === 'fa-magnifying-glass' ||
-    //                 e === 'search_result_item' ||
-    //                 e === 'search_result_L1' ||
-    //                 e === 'search_result_L2' ||
-    //                 e === 'search_result_L3' ||
-    //                 e === 'search_result_Explain' ||
-    //                 e === 'search_label_L1'
-    //     })
-    //     console.log(reslut_docu_toggle);
-    //     if (reslut_docu_toggle === false) {
-    //         el_search_input.classList.remove("search_input_after")
-    //         el_search_result_box.classList.remove("search_result_box_after")
-    //     }
-    // }
-
-    el_search_container.onclick = (e1) => {
-        var e1_length = e1.path.length - 3
-        e1.path.forEach((e2, i) => {
-            if (i < e1_length) {
-                var el_item = Array.from(e2.classList).includes('search_result_item')
-                if (el_item) {
-                    console.log(e2);
-                    var L1 = e2.children[0].children[0].innerText
-                    var L2 = e2.children[1].children[0].innerText
-                    var L3 = e2.children[2].children[0].innerText
-                    selectLDP('Open', L1, L2, L3)
-                }
-            }
-        });
-    }
-
-    el_search_button.onclick = (e) => {
-        e.stopPropagation()
-        el_search_input.classList.toggle('search_input_after')
-        el_search_result_box.classList.toggle('search_result_box_after')
-    }
-
-    el_search_input.onkeyup = (e) => {
-        processChanges(e)
-    }
-}
-function search_LDP(e) {
-    var value_input = e.target.value.trim();
-    var L3_search = data_LDP.filter((value) => {
-        return value.L3.toLocaleUpperCase().includes(value_input.toLocaleUpperCase())
-    })
-    var el_search_result_box = document.querySelector('.search_result_box')
-
-    var el_search_result_item = ``
-
-    console.log(L3_search)
-    L3_search.forEach(e1 => {
-        console.log(e1)
-        //#FFD966
-        var background = ''
-        switch (e1.L1) {
-            case 'Vận chuyển':
-                background = 'background: #FFD966;'
-                break;
-
-            case 'Thanh toán':
-                background = 'background: #A4C2F4;'
-                break;
-
-            case 'Tài khoản & Gian lận':
-                background = 'background: #6AA84F'
-                break;
-
-            case 'Trả hàng & Hoàn tiền':
-                background = 'background: #26a69a'
-                break;
-
-            case 'Marketing':
-                background = 'background: #CCA677'
-                break;
-
-            case 'BD':
-                background = 'background: #A19FCC'
-                break;
-
-            case 'Trang người bán & Sao quả tạ':
-                background = 'background: #068899'
-                break;
-
-            case 'Sản phẩm và pháp lý':
-                background = 'background: #63D297'
-                break;
-
-            case 'ShopeePay':
-                background = 'background: #A4C2F4'
-                break;
-
-            case 'Digital product':
-                background = 'background: #FFD966'
-                break;
-
-            case 'Câu hỏi chung':
-                background = 'background: #9FC5E8'
-                break;
-
-            case 'Câu hỏi khác':
-                background = 'background: #EA9999'
-                break;
-
-            case 'ShopeeFood':
-                background = 'background: #EA9999'
-                break;
-
-            case 'Bảo hiểm':
-                background = 'background: #26A69A'
-                break;
-
-            default:
-                break;
-        }
-        el_search_result_item += `
-        <div class="search_result_item">
-            <div class="search_result_L1" style="${background}">
-                <label>${e1.L1}</label>
-            </div>
-            <div class="search_result_L2">
-                <label>${e1.L2}</label>
-            </div>
-            <div class="search_result_L3">
-                <label>${e1.L3}</label>
-            </div>
-            <div class="search_result_Explain">
-                <label>${e1.Explain}</label>
-            </div>
-        </div>
-    `
-    })
-    el_search_result_box.innerHTML = el_search_result_item
-    console.log(el_search_result_item);
-}
-
-const processChanges = debounce((e) => search_LDP(e));
-
-function debounce(func, delay = 300) {
-    let timer;
-    console.log('1');
-    return (args) => {
-        //console.log(args);
-
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            func(args);
-        }, delay);
-    };
-}
-
-//Hàm chọn LDP=========================
-function selectLDP(Trang_thai_case, Request_L1, Request_L2, Request_L3) {
-    var Item_L1
-    var Item_L2
-    var Item_L3
-    var Item_Trang_thai_case
-    var id
-    Array.from(document.querySelector('#workstation').children[0].children).forEach(e => {
-        console.log(Object.keys(e.attributes).length);
-        if (Object.keys(e.attributes).length === 2) {
-            console.log(e);
-            id = e.attributes.id.value.substr(44, 11)
-
-            if (id === 'case-detail') {
-                console.log('thông tin');
-                var list_item_case_detail = e.children[0].children[0].children[0].children[0].children[0].children[0].children[2].children[0].children[1].children[0].children[1].children[0].children[0].children[1].children[0].children
-                Item_L1 = Find_Item(list_item_case_detail, '*Lý do phiếu L1').children[1].children[0].children[0].children[0]
-                Item_L2 = Find_Item(list_item_case_detail, '*Lý do phiếu L2').children[1].children[0].children[0].children[0]
-                Item_L3 = Find_Item(list_item_case_detail, '*Lý do phiếu L3').children[1].children[0].children[0].children[0]
-                Item_Trang_thai_case = Find_Item(list_item_case_detail, '*Trạng thái Case').children[1].children[0].children[0].children[0]
-                console.log(Item_L1, Item_L2, Item_L3, Item_Trang_thai_case);
-            }
-
-            if (id === 'agentchat?s') {
-                console.log('chat');
-                var list_item_chat = e.children[0].children[0].children[0].children[0].children[2].children[0].children[1].children[1].children[0].children[0].children[0].children[0].children[1].children[0].children
-                Item_L1 = Find_Item(list_item_chat, '*Lý do phiếu L1').children[1].children[0].children[0].children[0]
-                Item_L2 = Find_Item(list_item_chat, '*Lý do phiếu L2').children[1].children[0].children[0].children[0]
-                Item_L3 = Find_Item(list_item_chat, '*Lý do phiếu L3').children[1].children[0].children[0].children[0]
-                Item_Trang_thai_case = Find_Item(list_item_chat, '*Trạng thái Case').children[1].children[0].children[0].children[0]
-                console.log(Item_L1, Item_L2, Item_L3, Item_Trang_thai_case);
-            }
-
-            if (id === 'case/create') {
-                console.log('tạo case')
-                var list_item_case_create = e.children[0].children[0].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children[0].children[1].children[0].children
-                Item_L1 = Find_Item(list_item_case_create, '*Lý do phiếu L1').children[1].children[0].children[0].children[0]
-                Item_L2 = Find_Item(list_item_case_create, '*Lý do phiếu L2').children[1].children[0].children[0].children[0]
-                Item_L3 = Find_Item(list_item_case_create, '*Lý do phiếu L3').children[1].children[0].children[0].children[0]
-                //Item_Trang_thai_case = Find_Item(list_item_case_create,'*Trạng thái Case').children[1].children[0].children[0].children[0]
-                console.log(Item_L1, Item_L2, Item_L3);
-            }
-
-            //console.log('nè: ', Item_Trang_thai_case);
-        }
-
-    });
-
-    //console.log(Item_L1, Item_L2, Item_L3, Item_Trang_thai_case);
-    switch (Item_Trang_thai_case) {
-        case undefined:
-            elementReading(Item_L1, Request_L1)
-                .then((e) => {
-                    //console.log(e);
-                    e.click()
-                    return elementReading(Item_L2, Request_L2)
-                })
-                .then((e) => {
-                    //console.log(e);
-                    e.click()
-                    return elementReading(Item_L3, Request_L3)
-                })
-                .then((e) => {
-                    e.click()
-                })
-            break;
-
-        default:
-            console.log(Trang_thai_case)
-            console.log(Request_L1)
-            console.log(Request_L2)
-            console.log(Request_L3)
-
-            elementReading(Item_Trang_thai_case, Trang_thai_case)
-                .then((e) => {
-                    if (e !== undefined) {
-                        e.click()
-                    }
-                    return elementReading(Item_L1, Request_L1)
-                })
-                .then((e) => {
-                    //console.log(e);
-                    e.click()
-                    return elementReading(Item_L2, Request_L2)
-                })
-                .then((e) => {
-                    //console.log(e);
-                    e.click()
-                    return elementReading(Item_L3, Request_L3)
-                })
-                .then((e) => {
-                    e.click()
-                })
-            break;
-    }
-}
-
-function elementReading(params, Request) {
-    return new Promise(function (resolve, reject) {
-        //console.log(params);
-        params ? params.click() : reject('Không tìm thấy params: ' + params)
-
-        switch (params.parentElement.children.length) {
-            case 2:
-                console.log('Trường hợp đã load dữ liệu => click nhanh hơn')
-                var ele_result = params.nextSibling.children[0].children[0].children[0].children[1].children[0].children[0].children[0].children
-                Array.from(ele_result).forEach(element => {
-                    if (element.textContent === Request) {
-                        console.log('element.textContent: ', element.textContent);
-                        resolve(element)
-                    }
-                });
-                resolve()
-                break;
-
-            case 1:
-                console.log('Trường hợp chưa load dữ liệu => chạy event MutationObserver')
-
-                const observerOptions = {
-                    childList: true,
-                }
-
-                const observer = new MutationObserver(callback)
-
-                const targetNodes = params.parentElement
-                observer.observe(targetNodes, observerOptions)
-
-                function callback(mutations) {
-
-                    console.log('mutations: ', mutations);
-                    console.log('mutations: ', mutations[0].target);
-
-                    var ele_result = mutations[0].target.children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].children
-                    //console.log('nè 1', ele_result);
-
-                    observer.disconnect()
-                    Array.from(ele_result).forEach(element => {
-                        if (element.textContent === Request) {
-                            //console.log('element.textContent: ', element.textContent);
-                            //console.log('element: ', element.parentElement.children);
-                            resolve(element)
-                        }
-                    });
-                }
-                break;
-
-            default:
-                break;
-        }
-
-
-    })
-}
-
-function Find_Item(params, item) {
-    var result
-    Array.from(params).forEach((e) => {
-        if (e.children.length === 2) {
-            if (e.children[0].textContent === item) {
-                //console.log('nè: ', e);
-                result = e
-            }
-        }
-
-    })
-    return result
-
-}
-
-function Get_el_main_container(params, flag, audio_request) {
-    return new Promise(function (resolve, reject) {
-        const observerOptions = {
-            childList: true,
-        }
-        const observer = new MutationObserver(callback)
-
-        const targetNodes = params
-        observer.observe(targetNodes, observerOptions)
-        function callback(mutations) {
-
-
-            if (flag === 1) {
-                console.log('mutations: ', mutations);
-                console.log('mutations: ', mutations[0].target);
-                var el_main_container = mutations[0].target.children[0].children[0].children[1]
-                observer.disconnect()
-                if (el_main_container.classList[0] === 'main-container') {
-
-                    resolve(el_main_container)
-                }
-            }
-            if (flag === 2) {
-                console.log('mutations: ', mutations);
-                console.log('mutations: ', mutations[0].target);
-                console.log('mutations: ', mutations[0].target.children[0]);
-                observer.disconnect()
-                resolve([
-                    mutations[0].target.children[0].children[0].children[0],
-                    mutations[0].target.children[1]
-                ])
-            }
-            if (flag === 3) {
-                console.log('mutations: ', mutations);
-                console.log('mutations: ', mutations[0].target);
-                if (mutations[0].target.children[0].classList[0] === 'flexible-tabs___kjiTt') {
-                    var casee = mutations[0].target.children[0].children[0].children[0].children[0].children[0].children[1].children[0].innerText
-                    console.log('thêm case: ', casee);
-                    console.log(mutations[0].addedNodes[0].children[0].children[0].children[0]);
-                    console.log(mutations[0].addedNodes[0].children[0].children[0].children[0].classList);
-                    var reslut = Array.from(mutations[0].addedNodes[0].children[0].children[0].children[0].classList).some((e) => {
-                        return e === 'new-status___3T8Lw'
-                    })
-                    if (reslut) {
-                        // var oldItems = JSON.parse(localStorage.getItem('case_chat_new')) || [];
-                        // var newItem = casee
-                        // oldItems.push(newItem);
-                        // localStorage.setItem('case_chat_new', JSON.stringify(oldItems));
-                        // console.log('case_chat_new:', JSON.parse(localStorage.getItem('case_chat_new')));
-
-                        if (document.querySelector('.on_off_audio').checked) {
-                            var audio_request = new Audio(chrome.runtime.getURL("audio/request.mp3"));
-                            audio_request.play();                            
-                            console.log('chạy nhạc');
-                        }
-                        console.log('chat mới');
-                    } else {
-                        console.log('không phải chat mới');
-                    }
-                    chat_new_nav(mutations[0].target.children[0].children[0].children[0])
-                }
-            }
-        }
-    })
-}
-
-function chat_new_nav(params, audio_request) {
-    return new Promise(function (resolve, reject) {
-        const observerOptions = {
-            childList: true,
-        }
-
-        const observer = new MutationObserver(callback)
-
-        const targetNodes = params
-        observer.observe(targetNodes, observerOptions)
-        function callback(mutations) {
-            //console.log('mutations: ', mutations);
-            //console.log('mutations: ', mutations[0].target);
-            if (mutations[0].addedNodes.length > 0) {
-                var casee = mutations[0].addedNodes[0].children[0].children[1].children[0].innerText
-                console.log(mutations[0].addedNodes[0]);
-                console.log(mutations[0].addedNodes[0].style.background);
-                console.log('thêm case: ', casee);
-                console.log(mutations[0].addedNodes[0].classList);
-                var reslut = Array.from(mutations[0].addedNodes[0].classList).some((e) => {
-                    return e === 'new-status___3T8Lw'
-                })
-                if (reslut) {
-                    console.log('chat mới');
-                    if (document.querySelector('.on_off_audio').checked) {
-                        var audio_request = new Audio(chrome.runtime.getURL("audio/request.mp3"));
-                        audio_request.play();
-                        console.log('chạy nhạc');
-                    }
-
-                    // var oldItems = JSON.parse(localStorage.getItem('case_chat_new')) || [];
-                    // var newItem = casee
-                    // oldItems.push(newItem);
-                    // localStorage.setItem('case_chat_new', JSON.stringify(oldItems));
-                    // console.log('case_chat_new:', JSON.parse(localStorage.getItem('case_chat_new')));
-                } else {
-                    console.log('không phải chat mới');
-                }
-            }
-        }
-
-    })
-}
-
-function select(params, elementAdd) {
-    var menu = params.children[1].classList[0]
-    //console.log(menu);
-    //console.log(params);
-    //console.log(params.parentElement.children);
-    Array.from(params.parentElement.children).forEach((e) => {
-
-        if (Array.from(e.children[1].classList).includes(menu) === false) {
-            //console.log(e);
-            //console.log(e.children[1]);
-            e.children[1].classList.remove('select')
-        }
-    })
-}
-
-function Erorr(params) {
-    switch (params) {
-        case 1:
-            var el_erorr_container = document.querySelector('.long-shopee-react-toast')
-            el_erorr_container.classList.toggle("none")
-            break;
-
-        case 2:
-            Array.from(document.querySelector('#workstation').children[0].children).forEach(e1 => {
-                console.log(Object.keys(e1.attributes).length);
-                if (Object.keys(e1.attributes).length === 2) {
-                    var chat_wrapper = e1.children[0].children[1].children[0].children[0].children
-                    console.log('chat_wrapper: ', chat_wrapper);
-                    Array.from(chat_wrapper).forEach((e2) => {
-                        if (e2.classList.value.slice(0, 16) === 'chat_message_box') {
-                            var chat_wrapper_items = e2.children[0].children[0].children[0].children[0].children[0].children[0].children
-                            console.log('chat_wrapper_items: ', chat_wrapper_items);
-                            Array.from(chat_wrapper_items).forEach((e3) => {
-                                e3.innerHTML = ''
-                            })
-                        }
-                    })
-                }
-            });
-            break;
-
-        case 3:
-            Array.from(document.querySelector('#workstation').children[0].children).forEach(e1 => {
-                console.log(Object.keys(e1.attributes).length);
-                if (Object.keys(e1.attributes).length === 2) {
-                    var chat_wrapper = e1.children[0].children[1].children[0].children[0].children
-                    console.log('chat_wrapper: ', chat_wrapper);
-                    Array.from(chat_wrapper).forEach((e2) => {
-                        if (e2.classList.value.slice(0, 16) === 'chat_message_box') {
-                            var chat_wrapper_items = e2.children[0].children[0].children[0].children[0].children[0].children[0].children
-                            console.log('chat_wrapper_items: ', chat_wrapper_items);
-                            Array.from(chat_wrapper_items).forEach((e3) => {
-                                if (e3.children.length !== 0) {
-                                    var chat_wrapper_item = e3.children[0].children[0].children[0]
-
-                                    if (chat_wrapper_item.classList[1].slice(0, 14) === 'message_myself') {
-                                        //console.log(chat_wrapper_item)
-                                        chat_wrapper_item.insertAdjacentHTML("afterbegin", erorr2);
-                                    }
-                                }
-                            })
-                        }
-                    })
-                }
-            });
-            break;
-
-        default:
-            break;
-    }
-
-}
 
 
 
@@ -3402,4 +2763,3 @@ const data_LDP = [
 
 ]
 
-// /"web_accessible_resources" : [ "Fonts/*.*", "*.ttf", "*.eot", "*.svg", "*.woff", "*.woff2"],

@@ -225,10 +225,10 @@
 }
 
 /* ==================================================================== */
-.toggle_switch{
+.toggle_switch {
     position: relative;
-    width: 50px;
-    height: 30px;
+    width: 37px;
+    height: 21px;
     display: inline-block;
     align-self: center;
     margin: 5px 0 5px 0;
@@ -247,21 +247,21 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: #b7b7b7;
     border-radius: 34px;
-    transition: .4s;
+    transition: 0.4s;
 }
 
 .toggle_switch span:before {
     position: absolute;
-    content: "";
-    width: 20px;
-    height: 22px;
-    left: 4px;
-    bottom: 4px;
+    content: '';
+    width: 19px;
+    height: 19px;
+    left: 1px;
+    bottom: 1px;
     background-color: white;
     border-radius: 50%;
-    transition: .4s;
+    transition: 0.4s;
 }
 
 .toggle_switch input:checked + span {
@@ -273,6 +273,9 @@
 }
 
 .toggle_switch input:checked + span:before {
-    transform:  translateX(22px);
+    transform: translateX(16px);
+}
+input {
+    -webkit-appearance: auto !important;
 }
 

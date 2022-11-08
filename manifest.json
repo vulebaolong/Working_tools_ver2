@@ -1,24 +1,67 @@
 {
-    "name": "Working_tools ver2",
-    "description": "Công cụ giúp làm việc dễ hơn - by VLBL",
-    "version": "2.0",
-    "manifest_version": 2,
-    "background": {
-      "service_worker": "background.js",
-      "type": "module"
-    },
-    "permissions": ["identity", "identity.email"],
-    "page_action": {
-      "default_popup": "popup/popup.html"
-    },
-    "options_page": "option/options.html",
-    "web_accessible_resources": ["fontawesome/webfonts/*", "fontawesome/css/*","audio/request.mp3"],
-    "content_scripts": [
-        {
-          "matches": ["https://*.force.com/*", "https://cs.shopee.vn/portal/*","https://cs.uat.shopee.vn/portal/inhouse/*", "https://docs.google.com/spreadsheets/*"],
-          "css": ["css/style.css","fontawesome/css/all.css"],
-          "js": ["js/index.js"],
-          "all_frames": true
-        }
-    ]
+  "name": "Working_tools ver2",
+  "description": "Công cụ giúp làm việc dễ hơn - by VLBL",
+  "version": "2.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "identity",
+    "identity.email",
+    "storage",
+    "activeTab",
+    "tabGroups",
+    "scripting",
+    "tabs",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "page_action": {
+    "default_popup": "popup/popup.html"
+  },
+  "options_page": "option/options.html",
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "fontawesome/webfonts/*",
+        "fontawesome/css/*",
+        "audio/request.mp3",
+        "click_chat_end/*"
+      ],
+      "matches": [
+        "https://cs.shopee.vn/*"
+      ]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://cs.shopee.vn/portal/inhouse/workstation/*",
+        "https://cs.shopee.vn/portal/info/*",
+        "https://docs.google.com/spreadsheets/*"
+      ],
+      "css": [
+        "css/style.css",
+        "fontawesome/css/all.css",
+        "css/tool_bar.css",
+        "css/mes_chat_end.css"
+      ],
+      "js": [
+        "js/index.js",
+        "js/all_ldp.js",
+        "js/authen.js",
+        "js/chat_new.js",
+        "js/global.js",
+        "js/tool_bar.js",
+        "js/pause_chat.js"
+      ],
+      "all_frames": true
+    }
+  ]
 }
