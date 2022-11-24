@@ -6,6 +6,7 @@ function eventFire(el, etype) {
         var evObj = document.createEvent('Events');
         evObj.initEvent(etype, true, false);
         el.dispatchEvent(evObj);
+        
     }
 }
 
