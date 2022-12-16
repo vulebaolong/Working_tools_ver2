@@ -175,10 +175,16 @@ function listen_key() {
 //Pause chat 2
 function chat_wrap(params) {
 
-    let el_right_section = document.querySelector('.right-section___2FA6h').children
-    let item_section_status = el_right_section[4].children[0].children[0].children[0].children[1].children[0].innerText
-
-    let item_section = el_right_section[4].children[0].children[0].children[0]
+    let el_right_section_Ar = document.querySelector('.right-section___2FA6h').children
+    let el_right_section;
+    Array.from(el_right_section_Ar).forEach((e) => {
+        let nameClassList = e.children[0].classList.value
+        const subString = 'status-wraper'
+        let isSubString = nameClassList.includes(subString)
+        if (isSubString) el_right_section = e
+    })
+    let item_section_status = el_right_section.children[0].children[0].children[0].children[1].children[0].innerText
+    let item_section = el_right_section.children[0].children[0].children[0]
     if (item_section_status === "Busy") {
         console.log(item_section_status);
     }
